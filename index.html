@@ -1,1106 +1,396 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GN Suite Roma - Luxury Vacation Rentals</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --noir: #1a1a1a;
-            --charcoal: #2d2d2d;
-            --stone: #8a8a8a;
-            --pearl: #f8f8f8;
-            --white: #ffffff;
-            --accent: #c9a961;
-            --border: #e8e8e8;
-        }
-
-        body {
-            font-family: 'Work Sans', sans-serif;
-            background: var(--white);
-            color: var(--charcoal);
-            line-height: 1.65;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Header */
-        header {
-            background: var(--white);
-            padding: 2rem 0;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.98);
-        }
-
-        nav {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .brand {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--noir);
-            letter-spacing: -0.02em;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: var(--charcoal);
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 400;
-            transition: color 0.3s ease;
-            letter-spacing: 0.01em;
-        }
-
-        .nav-link:hover {
-            color: var(--accent);
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .icon-link {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--stone);
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            border-radius: 50%;
-        }
-
-        .icon-link:hover {
-            color: var(--noir);
-            border-color: var(--border);
-        }
-
-        /* Promo Banner */
-        /* Promo Modal */
-        .promo-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-
-        .promo-modal-overlay.hidden {
-            display: none;
-        }
-
-        .promo-modal {
-            background: var(--noir);
-            color: var(--white);
-            max-width: 600px;
-            width: 90%;
-            padding: 4rem 3rem;
-            position: relative;
-            text-align: center;
-        }
-
-        .promo-modal::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, transparent 0%, rgba(201, 169, 97, 0.1) 100%);
-            pointer-events: none;
-        }
-
-        .promo-content {
-            position: relative;
-        }
-
-        .promo-label {
-            font-size: 0.8rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 1.5rem;
-        }
-
-        .promo-title {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            line-height: 1.3;
-        }
-
-        .promo-subtitle {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 300;
-            margin-bottom: 2rem;
-        }
-
-        .promo-modal-close {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 2rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.3s ease;
-        }
-
-        .promo-modal-close:hover {
-            color: white;
-        }
-
-        /* Sticky Promo Banner */
-        .promo-banner {
-            background: var(--noir);
-            color: var(--white);
-            padding: 1rem 3rem;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 150;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: none;
-        }
-
-        .promo-banner.visible {
-            display: block;
-        }
-
-        .promo-banner-content {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-        }
-
-        .promo-banner-text {
-            font-size: 0.95rem;
-            font-weight: 400;
-            flex: 1;
-        }
-
-        .promo-banner-text strong {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .promo-banner-close {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .promo-banner-close:hover {
-            color: white;
-        }
-
-        /* Hero */
-        .hero {
-            padding: 6rem 3rem 4rem;
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .hero-content {
-            max-width: 720px;
-        }
-
-        .hero h1 {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: var(--noir);
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-description {
-            font-size: 1.15rem;
-            color: var(--stone);
-            line-height: 1.75;
-            font-weight: 300;
-        }
-
-        /* Properties */
-        .properties-section {
-            padding: 4rem 3rem;
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        .properties-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .property {
-            border: 1px solid var(--border);
-            background: var(--white);
-            transition: all 0.4s ease;
-        }
-
-        .property:hover {
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-            transform: translateY(-4px);
-        }
-
-        .property-image {
-            height: 420px;
-            background: var(--pearl);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .property-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .oro-bg {
-            background: linear-gradient(135deg, #f5e6d3 0%, #e8d4b8 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            color: var(--accent);
-        }
-
-        .garden-bg {
-            background: linear-gradient(135deg, #e8f0e8 0%, #d4e4d4 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            color: #6b8e6b;
-        }
-
-        .property-badge {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: var(--white);
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid var(--border);
-        }
-
-        .property-content {
-            padding: 2.5rem;
-        }
-
-        .property-header {
-            margin-bottom: 2rem;
-        }
-
-        .property-name {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--noir);
-            margin-bottom: 0.75rem;
-            letter-spacing: -0.01em;
-        }
-
-        .property-location {
-            color: var(--stone);
-            font-size: 0.95rem;
-            font-weight: 400;
-        }
-
-        .property-details {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            padding: 1.5rem 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
-        }
-
-        .detail-item {
-            font-size: 0.9rem;
-            color: var(--charcoal);
-        }
-
-        .detail-label {
-            color: var(--stone);
-            font-weight: 300;
-        }
-
-        .property-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 0.75rem;
-        }
-
-        .btn {
-            padding: 1rem 1.5rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            text-decoration: none;
-            text-align: center;
-            cursor: pointer;
-            border: none;
-            transition: all 0.3s ease;
-            letter-spacing: 0.02em;
-        }
-
-        .btn-primary {
-            background: var(--noir);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background: var(--charcoal);
-        }
-
-        .btn-secondary {
-            background: var(--white);
-            color: var(--noir);
-            border: 1px solid var(--noir);
-        }
-
-        .btn-secondary:hover {
-            background: var(--noir);
-            color: var(--white);
-        }
-
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--white);
-            max-width: 540px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            padding: 2.5rem 2.5rem 2rem;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .modal-title {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--noir);
-        }
-
-        .modal-subtitle {
-            color: var(--stone);
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--stone);
-            cursor: pointer;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-close:hover {
-            color: var(--noir);
-        }
-
-        .modal-body {
-            padding: 2.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.75rem;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--noir);
-            margin-bottom: 0.75rem;
-            letter-spacing: 0.01em;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.9rem 1rem;
-            border: 1px solid var(--border);
-            font-size: 0.95rem;
-            font-family: 'Work Sans', sans-serif;
-            transition: all 0.3s ease;
-            background: var(--white);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--noir);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 1.1rem;
-            background: var(--noir);
-            color: var(--white);
-            border: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 0.02em;
-            margin-top: 1rem;
-        }
-
-        .submit-btn:hover {
-            background: var(--charcoal);
-        }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--noir);
-            color: var(--white);
-            padding: 1rem 1.5rem;
-            font-size: 0.9rem;
-            z-index: 10000;
-            transform: translateY(150px);
-            opacity: 0;
-            transition: all 0.4s ease;
-        }
-
-        .notification.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--noir);
-            color: var(--white);
-            padding: 4rem 3rem 3rem;
-            margin-top: 6rem;
-        }
-
-        .footer-content {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 4rem;
-        }
-
-        .footer-brand {
-            font-family: 'Libre Baskerville', serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .footer-description {
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-            font-weight: 300;
-        }
-
-        .footer-info {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-            line-height: 1.8;
-        }
-
-        .footer-section h4 {
-            font-size: 0.85rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
-            font-weight: 300;
-        }
-
-        .footer-links a:hover {
-            color: var(--white);
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-        }
-
-        .footer-social .icon-link {
-            border-color: rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .footer-social .icon-link:hover {
-            border-color: rgba(255, 255, 255, 0.4);
-            color: var(--white);
-        }
-
-        .footer-bottom {
-            max-width: 1280px;
-            margin: 3rem auto 0;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.85rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .properties-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 2.5rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                padding: 0 1.5rem;
-            }
-
-            .nav-links {
-                gap: 1.5rem;
-            }
-
-            .nav-link {
-                display: none;
-            }
-
-            .hero {
-                padding: 4rem 1.5rem 3rem;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .properties-section {
-                padding: 3rem 1.5rem;
-            }
-
-            .property-image {
-                height: 320px;
-            }
-
-            .property-actions {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            footer {
-                padding: 3rem 1.5rem 2rem;
-            }
-        }
-
-        /* Loading state removed for cleaner initial load */
-        .hidden {
-            display: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GN Suite Roma - Luxury Vacation Rentals</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Work+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+--noir:#1a1a1a;
+--charcoal:#2d2d2d;
+--stone:#8a8a8a;
+--white:#fff;
+--accent:#c9a961;
+--border:#e8e8e8;
+}
+
+body{
+font-family:'Work Sans',sans-serif;
+color:var(--charcoal);
+line-height:1.65;
+}
+
+/* HEADER */
+header{
+position:sticky;
+top:0;
+z-index:100;
+background:#fff;
+border-bottom:1px solid var(--border);
+}
+
+nav{
+max-width:1280px;
+margin:auto;
+padding:2rem 3rem;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.brand{
+font-family:'Libre Baskerville',serif;
+font-size:1.5rem;
+font-weight:700;
+}
+
+.nav-links{
+display:flex;
+gap:2rem;
+align-items:center;
+}
+
+.nav-link{
+text-decoration:none;
+color:var(--charcoal);
+font-size:.95rem;
+}
+
+/* HERO */
+.hero{
+max-width:1280px;
+margin:auto;
+padding:5rem 3rem 3rem;
+}
+
+.hero h1{
+font-family:'Libre Baskerville',serif;
+font-size:3.5rem;
+margin-bottom:1rem;
+}
+
+.hero-description{
+color:var(--stone);
+font-size:1.15rem;
+max-width:720px;
+}
+
+.hero-discount{
+margin-top:1.5rem;
+font-size:.95rem;
+letter-spacing:.08em;
+text-transform:uppercase;
+color:var(--accent);
+font-weight:600;
+}
+
+/* PROPERTIES */
+.properties-section{
+max-width:1280px;
+margin:auto;
+padding:4rem 3rem;
+}
+
+.properties-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:3rem;
+}
+
+.property{
+border:1px solid var(--border);
+transition:.3s;
+}
+
+.property:hover{
+transform:translateY(-4px);
+box-shadow:0 20px 60px rgba(0,0,0,.08);
+}
+
+/* SLIDER */
+.slider{
+position:relative;
+height:420px;
+overflow:hidden;
+}
+
+.slides{
+display:flex;
+height:100%;
+transition:transform .5s ease;
+}
+
+.slides img{
+width:100%;
+height:100%;
+object-fit:cover;
+flex-shrink:0;
+}
+
+.slide-btn{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+background:rgba(0,0,0,.5);
+border:none;
+color:#fff;
+font-size:2rem;
+width:42px;
+height:42px;
+cursor:pointer;
+z-index:5;
+}
+
+.slide-btn.prev{left:10px}
+.slide-btn.next{right:10px}
+
+.property-badge{
+position:absolute;
+top:15px;
+right:15px;
+background:#fff;
+padding:.4rem .8rem;
+font-size:.85rem;
+border:1px solid var(--border);
+z-index:6;
+}
+
+/* CONTENT */
+.property-content{
+padding:2.5rem;
+}
+
+.property-name{
+font-family:'Libre Baskerville',serif;
+font-size:1.75rem;
+margin-bottom:.5rem;
+}
+
+.property-location{
+color:var(--stone);
+margin-bottom:1.5rem;
+}
+
+.property-details{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:1rem;
+padding:1.5rem 0;
+border-top:1px solid var(--border);
+border-bottom:1px solid var(--border);
+margin-bottom:2rem;
+}
+
+.detail-label{color:var(--stone)}
+
+.property-actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:.75rem;
+}
+
+.btn{
+padding:1rem;
+text-align:center;
+border:none;
+cursor:pointer;
+font-size:.9rem;
+}
+
+.btn-primary{
+background:var(--noir);
+color:#fff;
+}
+
+.btn-secondary{
+border:1px solid var(--noir);
+background:#fff;
+color:var(--noir);
+}
+
+/* MODAL */
+.modal-overlay{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.7);
+align-items:center;
+justify-content:center;
+z-index:1000;
+}
+
+.modal-overlay.active{display:flex}
+
+.modal{
+background:#fff;
+max-width:520px;
+width:90%;
+}
+
+.modal-header{
+padding:2rem;
+border-bottom:1px solid var(--border);
+display:flex;
+justify-content:space-between;
+}
+
+.modal-body{padding:2rem}
+
+/* FOOTER */
+footer{
+background:var(--noir);
+color:#fff;
+padding:4rem 3rem;
+margin-top:5rem;
+text-align:center;
+}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+.properties-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:768px){
+.hero h1{font-size:2.5rem}
+.slider{height:300px}
+.property-actions{grid-template-columns:1fr}
+}
+</style>
 </head>
+
 <body>
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        Messaggio copiato negli appunti
-    </div>
 
-    <!-- Promo Modal Popup -->
-    <div class="promo-modal-overlay" id="promoModal">
-        <div class="promo-modal">
-            <button class="promo-modal-close" onclick="closePromoModal()">×</button>
-            <div class="promo-content">
-                <div class="promo-label">Prenotazione Diretta</div>
-                <h2 class="promo-title">Sconto Esclusivo del 15%</h2>
-                <p class="promo-subtitle">Prenota direttamente tramite WhatsApp e risparmia sul tuo soggiorno</p>
-            </div>
-        </div>
-    </div>
+<!-- HERO -->
+<section class="hero">
+<h1>Eleganza e Comfort nel Cuore di Roma</h1>
+<p class="hero-description">
+Due location esclusive per vivere Roma con stile, comfort e posizione strategica.
+</p>
+<div class="hero-discount">Sconto 10% su prenotazioni dirette via WhatsApp</div>
+</section>
 
-    <!-- Sticky Promo Banner -->
-    <div class="promo-banner" id="promoBanner">
-        <div class="promo-banner-content">
-            <div class="promo-banner-text">
-                <strong>Sconto 15%</strong> su prenotazioni dirette tramite WhatsApp
-            </div>
-            <button class="promo-banner-close" onclick="hidePromoBanner()">×</button>
-        </div>
-    </div>
+<!-- PROPERTIES -->
+<section class="properties-section">
+<div class="properties-grid">
 
-    <!-- Header -->
-    <header>
-        <nav>
-            <div class="brand">GN SUITE ROMA</div>
-            <div class="nav-links">
-                <a href="#properties" class="nav-link">Le Nostre Case</a>
-                <a href="https://www.gnsuiteroma.it/" target="_blank" class="nav-link">Sito Web</a>
-                <div class="social-icons">
-                    <a href="https://www.instagram.com/gnsuiteroma" target="_blank" class="icon-link" aria-label="Instagram">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                        </svg>
-                    </a>
-                    <a href="https://wa.me/393123456789" target="_blank" class="icon-link" aria-label="WhatsApp">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </header>
+<!-- GN SUITE ORO -->
+<article class="property">
+<div class="slider" data-slider>
+<div class="slides">
+<img src="img/oro-1.jpg">
+<img src="img/oro-2.jpg">
+<img src="img/oro-3.jpg">
+</div>
+<button class="slide-btn prev">‹</button>
+<button class="slide-btn next">›</button>
+<div class="property-badge">Valutazione 4.89</div>
+</div>
 
-    <!-- Hero -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Eleganza e Comfort nel Cuore di Roma</h1>
-            <p class="hero-description">Due location esclusive accuratamente selezionate per offrire un'esperienza autentica nella Città Eterna. Spazi raffinati, posizione strategica e servizi di alto livello.</p>
-        </div>
-    </section>
+<div class="property-content">
+<h3 class="property-name">GN Suite Oro</h3>
+<p class="property-location">Piazza dell’Oro 2, Roma</p>
 
-    <!-- Properties -->
-    <section class="properties-section" id="properties">
-        <div class="properties-grid">
-            <!-- GN Suite Oro -->
-            <article class="property">
-                <div class="property-image oro-bg">
-                    <div style="font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 3rem;">ORO</div>
-                    <div class="property-badge">Valutazione 4.89</div>
-                </div>
-                <div class="property-content">
-                    <div class="property-header">
-                        <h3 class="property-name">GN Suite Oro</h3>
-                        <p class="property-location">Piazza dell'Oro, Roma</p>
-                    </div>
-                    <div class="property-details">
-                        <div class="detail-item">
-                            <span class="detail-label">Camera:</span> 1
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Letti:</span> 2
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Bagno:</span> 1
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Zona:</span> Centro Storico
-                        </div>
-                    </div>
-                    <div class="property-actions">
-                        <button class="btn btn-primary" onclick="openModal('GN Suite Oro', 'Piazza dell\'Oro, Roma')">
-                            Richiedi Disponibilità
-                        </button>
-                        <a href="#" target="_blank" class="btn btn-secondary">
-                            Airbnb
-                        </a>
-                        <a href="#" target="_blank" class="btn btn-secondary">
-                            Booking
-                        </a>
-                    </div>
-                </div>
-            </article>
+<div class="property-details">
+<div><span class="detail-label">Camera:</span> 1</div>
+<div><span class="detail-label">Letti:</span> 2</div>
+<div><span class="detail-label">Bagno:</span> 1</div>
+<div><span class="detail-label">Zona:</span> Centro Storico</div>
+</div>
 
-            <!-- GN Suite Garden -->
-            <article class="property">
-                <div class="property-image garden-bg">
-                    <div style="font-family: 'Libre Baskerville', serif; font-weight: 700; font-size: 3rem; color: #6b8e6b;">GARDEN</div>
-                    <div class="property-badge">Valutazione 4.89</div>
-                </div>
-                <div class="property-content">
-                    <div class="property-header">
-                        <h3 class="property-name">GN Suite Garden</h3>
-                        <p class="property-location">Via Macerata 81, Roma</p>
-                    </div>
-                    <div class="property-details">
-                        <div class="detail-item">
-                            <span class="detail-label">Camera:</span> 1
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Letti:</span> 2
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Bagno:</span> 1
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Giardino:</span> Privato
-                        </div>
-                    </div>
-                    <div class="property-actions">
-                        <button class="btn btn-primary" onclick="openModal('GN Suite Garden', 'Via Macerata 81, Roma')">
-                            Richiedi Disponibilità
-                        </button>
-                        <a href="#" target="_blank" class="btn btn-secondary">
-                            Airbnb
-                        </a>
-                        <a href="#" target="_blank" class="btn btn-secondary">
-                            Booking
-                        </a>
-                    </div>
-                </div>
-            </article>
-        </div>
-    </section>
+<div class="property-actions">
+<button class="btn btn-primary" onclick="openModal('GN Suite Oro','Piazza dell’Oro 2, Roma')">Richiedi Disponibilità</button>
+<a class="btn btn-secondary">Airbnb</a>
+</div>
+</div>
+</article>
 
-    <!-- Booking Modal -->
-    <div class="modal-overlay" id="modal">
-        <div class="modal">
-            <div class="modal-header">
-                <div>
-                    <h3 class="modal-title" id="modalPropertyName"></h3>
-                    <p class="modal-subtitle" id="modalPropertyAddress"></p>
-                </div>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <form id="bookingForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="checkIn">Check-in</label>
-                            <input type="date" class="form-input" id="checkIn" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="checkOut">Check-out</label>
-                            <input type="date" class="form-input" id="checkOut" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="guests">Numero di ospiti</label>
-                        <input type="number" class="form-input" id="guests" min="1" max="10" value="2" required>
-                    </div>
-                    <button type="submit" class="submit-btn">
-                        Invia Richiesta su WhatsApp
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
+<!-- GN SUITE GARDEN -->
+<article class="property">
+<div class="slider" data-slider>
+<div class="slides">
+<img src="img/garden-1.jpg">
+<img src="img/garden-2.jpg">
+</div>
+<button class="slide-btn prev">‹</button>
+<button class="slide-btn next">›</button>
+<div class="property-badge">Valutazione 4.89</div>
+</div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div>
-                <div class="footer-brand">GN SUITE ROMA</div>
-                <p class="footer-description">
-                    Case vacanza di lusso nel cuore di Roma. Comfort, eleganza e posizione strategica per un soggiorno indimenticabile nella Città Eterna.
-                </p>
-                <div class="footer-info">
-                    <p>P.IVA 17516291006</p>
-                    <p>@gnsuiteroma</p>
-                </div>
-                <div class="footer-social">
-                    <a href="https://www.instagram.com/gnsuiteroma" target="_blank" class="icon-link" aria-label="Instagram">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                        </svg>
-                    </a>
-                    <a href="https://www.tiktok.com/@gnsuiteroma" target="_blank" class="icon-link" aria-label="TikTok">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
-                        </svg>
-                    </a>
-                    <a href="https://wa.me/393123456789" target="_blank" class="icon-link" aria-label="WhatsApp">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                        </svg>
-                    </a>
-                    <a href="https://www.gnsuiteroma.it/" target="_blank" class="icon-link" aria-label="Sito Web">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <line x1="2" y1="12" x2="22" y2="12"/>
-                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h4>Le Nostre Suite</h4>
-                <ul class="footer-links">
-                    <li><a href="#properties">GN Suite Oro</a></li>
-                    <li><a href="#properties">GN Suite Garden</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Collegamenti</h4>
-                <ul class="footer-links">
-                    <li><a href="https://www.gnsuiteroma.it/" target="_blank">Sito Web</a></li>
-                    <li><a href="https://www.instagram.com/gnsuiteroma" target="_blank">Instagram</a></li>
-                    <li><a href="#">Airbnb</a></li>
-                    <li><a href="#">Booking.com</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            © 2026 GN SUITE ROMA. Tutti i diritti riservati.
-        </div>
-    </footer>
+<div class="property-content">
+<h3 class="property-name">GN Suite Garden</h3>
+<p class="property-location">Via Macerata 81, Roma</p>
 
-    <script>
-        let selectedProperty = '';
-        let selectedAddress = '';
+<div class="property-details">
+<div><span class="detail-label">Camera:</span> 1</div>
+<div><span class="detail-label">Letti:</span> 1</div>
+<div><span class="detail-label">Bagno:</span> 1</div>
+<div><span class="detail-label">Giardino:</span> Privato</div>
+</div>
 
-        // Set minimum dates
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('checkIn').min = today;
-        document.getElementById('checkOut').min = today;
+<div class="property-actions">
+<button class="btn btn-primary" onclick="openModal('GN Suite Garden','Via Macerata 81, Roma')">Richiedi Disponibilità</button>
+<a class="btn btn-secondary">Airbnb</a>
+</div>
+</div>
+</article>
 
-        // Update checkout min date
-        document.getElementById('checkIn').addEventListener('change', function() {
-            const checkIn = new Date(this.value);
-            checkIn.setDate(checkIn.getDate() + 1);
-            document.getElementById('checkOut').min = checkIn.toISOString().split('T')[0];
-        });
+</div>
+</section>
 
-        // Close promo modal and show sticky banner
-        function closePromoModal() {
-            document.getElementById('promoModal').classList.add('hidden');
-            document.getElementById('promoBanner').classList.add('visible');
-            document.body.style.overflow = 'auto';
-        }
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+<div class="modal">
+<div class="modal-header">
+<h3 id="modalTitle"></h3>
+<button onclick="closeModal()">×</button>
+</div>
+<div class="modal-body">
+<p id="modalAddress"></p>
+<p style="margin-top:1rem;font-size:.9rem;color:#555">
+*Sconto 10% valido per prenotazioni dirette via WhatsApp
+</p>
+</div>
+</div>
+</div>
 
-        // Hide sticky banner
-        function hidePromoBanner() {
-            document.getElementById('promoBanner').classList.remove('visible');
-        }
+<footer>
+© 2026 GN SUITE ROMA
+</footer>
 
-        // Open modal
-        function openModal(property, address) {
-            selectedProperty = property;
-            selectedAddress = address;
-            document.getElementById('modalPropertyName').textContent = property;
-            document.getElementById('modalPropertyAddress').textContent = address;
-            document.getElementById('modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+<script>
+/* SLIDER */
+document.querySelectorAll('[data-slider]').forEach(slider=>{
+let index=0;
+const slides=slider.querySelector('.slides');
+const total=slides.children.length;
 
-        // Close modal
-        function closeModal() {
-            document.getElementById('modal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
+slider.querySelector('.next').onclick=()=>{
+index=(index+1)%total;
+slides.style.transform=`translateX(-${index*100}%)`;
+}
 
-        // Show notification
-        function showNotification() {
-            const notification = document.getElementById('notification');
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
+slider.querySelector('.prev').onclick=()=>{
+index=(index-1+total)%total;
+slides.style.transform=`translateX(-${index*100}%)`;
+}
+});
 
-        // Handle form submission
-        document.getElementById('bookingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+/* MODAL */
+function openModal(name,address){
+document.getElementById('modalTitle').innerText=name;
+document.getElementById('modalAddress').innerText=address;
+document.getElementById('modal').classList.add('active');
+}
 
-            const checkIn = document.getElementById('checkIn').value;
-            const checkOut = document.getElementById('checkOut').value;
-            const guests = document.getElementById('guests').value;
+function closeModal(){
+document.getElementById('modal').classList.remove('active');
+}
+</script>
 
-            if (!checkIn || !checkOut) {
-                alert('Si prega di selezionare le date');
-                return;
-            }
-
-            // Format dates
-            const checkInDate = new Date(checkIn).toLocaleDateString('it-IT', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-            const checkOutDate = new Date(checkOut).toLocaleDateString('it-IT', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-
-            // Create message
-            const message = `Buongiorno,
-
-Vorrei richiedere informazioni sulla disponibilità per:
-
-Proprietà: ${selectedProperty}
-Indirizzo: ${selectedAddress}
-
-Check-in: ${checkInDate}
-Check-out: ${checkOutDate}
-Numero di ospiti: ${guests}
-
-Sono interessato/a allo sconto del 15% per la prenotazione diretta tramite WhatsApp.
-
-Grazie`;
-
-            // Copy to clipboard
-            navigator.clipboard.writeText(message).then(() => {
-                showNotification();
-                setTimeout(() => {
-                    const phoneNumber = '393123456789'; // Replace with your number
-                    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-                    window.open(whatsappURL, '_blank');
-                    closeModal();
-                }, 600);
-            }).catch(() => {
-                // Fallback
-                const phoneNumber = '393123456789';
-                const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-                window.open(whatsappURL, '_blank');
-                closeModal();
-            });
-        });
-
-        // Close modal on escape
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-                closePromoModal();
-            }
-        });
-
-        // Close modal on outside click
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
-
-        // Close promo modal on outside click
-        document.getElementById('promoModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closePromoModal();
-            }
-        });
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-    </script>
 </body>
 </html>
