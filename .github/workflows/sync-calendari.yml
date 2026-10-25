@@ -1,0 +1,31 @@
+name: Sincronizza calendari Lodgify
+
+on:
+  schedule:
+    - cron: "17 * * * *"   # ogni ora
+  workflow_dispatch:        # avvio manuale dalla tab Actions
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Scarica i calendari
+        run: python scripts/sync_calendari.py
+      - name: Salva se ci sono novità
+        run: |
+          if [ -n "$(git status --porcelain disponibilita.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+            git add disponibilita.json
+            git commit -m "Aggiorna disponibilità da Lodgify"
+            git push
+          else
+            echo "Nessuna modifica"
+          fi

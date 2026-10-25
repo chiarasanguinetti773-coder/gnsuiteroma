@@ -793,6 +793,19 @@
             display: none;
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+    <style>
+        .flatpickr-day.flatpickr-disabled,
+        .flatpickr-day.flatpickr-disabled:hover {
+            color: #c4c4c4;
+            text-decoration: line-through;
+        }
+        .availability-note {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin: -0.25rem 0 1rem;
+        }
+    </style>
 </head>
 <body>
     <!-- Notification -->
@@ -985,13 +998,14 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="checkIn">Check-in</label>
-                            <input type="date" class="form-input" id="checkIn" required>
+                            <input type="text" class="form-input" id="checkIn" placeholder="Seleziona data" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="checkOut">Check-out</label>
-                            <input type="date" class="form-input" id="checkOut" required>
+                            <input type="text" class="form-input" id="checkOut" placeholder="Seleziona data" required>
                         </div>
                     </div>
+                    <p class="availability-note">Le date barrate sono già prenotate.</p>
                     <div class="form-group">
                         <label class="form-label" for="guests">Numero di ospiti</label>
                         <input type="number" class="form-input" id="guests" min="1" max="10" value="2" required>
@@ -1064,6 +1078,8 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/it.js"></script>
     <script>
         let selectedProperty = '';
         let selectedAddress = '';
@@ -1118,17 +1134,72 @@
             moveCarousel('garden', 1);
         }, 5000);
 
-        // Set minimum dates
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('checkIn').min = today;
-        document.getElementById('checkOut').min = today;
+        // ===== Disponibilità da Lodgify (disponibilita.json, aggiornato ogni ora da GitHub Actions) =====
+        let occupate = { oro: [], garden: [] };
+        let proprietaAttiva = null;
 
-        // Update checkout min date
-        document.getElementById('checkIn').addEventListener('change', function() {
-            const checkIn = new Date(this.value);
-            checkIn.setDate(checkIn.getDate() + 1);
-            document.getElementById('checkOut').min = checkIn.toISOString().split('T')[0];
-        });
+        fetch('disponibilita.json?v=' + Date.now())
+            .then(r => r.ok ? r.json() : null)
+            .then(dati => { if (dati) { occupate = dati; aggiornaCalendari(); } })
+            .catch(() => {});
+
+        function chiaveProprieta(nome) {
+            return /garden/i.test(nome) ? 'garden' : 'oro';
+        }
+
+        function isoLocale(d) {
+            const z = n => String(n).padStart(2, '0');
+            return d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate());
+        }
+
+        function nottiOccupate() {
+            return new Set(proprietaAttiva ? (occupate[proprietaAttiva] || []) : []);
+        }
+
+        const opzioniBase = {
+            locale: 'it',
+            dateFormat: 'Y-m-d',
+            altInput: true,
+            altFormat: 'j F Y',
+            disableMobile: true,
+            minDate: 'today'
+        };
+
+        let pickerCheckIn = null;
+        const pickerCheckOut = flatpickr('#checkOut', Object.assign({}, opzioniBase, {
+            disable: [function(data) {
+                const arrivo = pickerCheckIn && pickerCheckIn.selectedDates[0];
+                if (!arrivo) return false;
+                if (data <= arrivo) return true;
+                // il check-out è possibile fino al primo giorno occupato dopo l'arrivo (incluso)
+                const occ = nottiOccupate();
+                const g = new Date(arrivo);
+                while (g < data) {
+                    if (occ.has(isoLocale(g))) return true;
+                    g.setDate(g.getDate() + 1);
+                }
+                return false;
+            }]
+        }));
+
+        pickerCheckIn = flatpickr('#checkIn', Object.assign({}, opzioniBase, {
+            disable: [function(data) { return nottiOccupate().has(isoLocale(data)); }],
+            onChange: function(date) {
+                if (!date[0]) return;
+                const minimo = new Date(date[0]);
+                minimo.setDate(minimo.getDate() + 1);
+                pickerCheckOut.clear();
+                pickerCheckOut.set('minDate', minimo);
+                pickerCheckOut.jumpToDate(minimo);
+                pickerCheckOut.redraw();
+                setTimeout(() => pickerCheckOut.open(), 50);
+            }
+        }));
+
+        function aggiornaCalendari() {
+            pickerCheckIn.redraw();
+            pickerCheckOut.redraw();
+        }
 
         // Close promo modal and show sticky banner
         function closePromoModal() {
@@ -1146,6 +1217,11 @@
         function openModal(property, address) {
             selectedProperty = property;
             selectedAddress = address;
+            proprietaAttiva = chiaveProprieta(property);
+            pickerCheckIn.clear();
+            pickerCheckOut.clear();
+            pickerCheckOut.set('minDate', 'today');
+            aggiornaCalendari();
             document.getElementById('modalPropertyName').textContent = property;
             document.getElementById('modalPropertyAddress').textContent = address;
             document.getElementById('modal').classList.add('active');
