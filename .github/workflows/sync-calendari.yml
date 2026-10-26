@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "17 * * * *"   # ogni ora
   workflow_dispatch:        # avvio manuale dalla tab Actions
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-calendari.yml'
+      - 'scripts/sync_calendari.py'
 
 permissions:
   contents: write
